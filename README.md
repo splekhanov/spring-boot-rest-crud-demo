@@ -1,5 +1,5 @@
 # RESTful WEB SERVICE CRUD DEMO 
-RESTful CRUD application example created for training purposes.
+RESTful CRUD application example created with Spring Boot and Hibernate integration.
 
 ## API
 | Method    | Requested resource          | Action                        |
