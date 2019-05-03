@@ -1,11 +1,9 @@
 package com.example.demo.rest;
 
-import com.example.demo.dao.EmployeeDAO;
 import com.example.demo.entity.Employee;
+import com.example.demo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,17 +11,43 @@ import java.util.List;
 @RequestMapping("/api")
 public class EmployeeRestController {
 
-    private EmployeeDAO employeeDAO;
-
-    //quick and dirty: inject DAO without service layer
     @Autowired
-    public EmployeeRestController(EmployeeDAO theEmployeeDAO){
-        employeeDAO = theEmployeeDAO;
+    private EmployeeService employeeService;
+
+    @GetMapping("/employees")
+    public List<Employee> findAll() {
+        return employeeService.findAll();
     }
 
-    //expose "/employees" and return list of employees
-    @GetMapping("/employees")
-    public List<Employee> findAll(){
-        return employeeDAO.findAll();
+    @GetMapping("/employees/{employeeId}")
+    public Employee getEmployee(@PathVariable int employeeId) {
+        Employee theEmployee = employeeService.findById(employeeId);
+        if (theEmployee == null) {
+            throw new RuntimeException("Employee id not found: " + employeeId);
+        }
+        return theEmployee;
+    }
+
+    @PostMapping("/employees")
+    public Employee addEmployee(@RequestBody Employee theEmployee) {
+        theEmployee.setId(0);
+        employeeService.save(theEmployee);
+        return theEmployee;
+    }
+
+    @PutMapping("/employees")
+    public Employee updateEmployee(@RequestBody Employee theEmployee) {
+        employeeService.save(theEmployee);
+        return theEmployee;
+    }
+
+    @DeleteMapping("/employees/{employeeId}")
+    public String deleteEmployee(@PathVariable int employeeId) {
+        Employee theEmployee = employeeService.findById(employeeId);
+        if (theEmployee == null) {
+            throw new RuntimeException("Employee with id " + employeeId + " does not exist");
+        }
+        employeeService.deleteById(employeeId);
+        return "Employee with id " + employeeId + " has been successfully deleted";
     }
 }
