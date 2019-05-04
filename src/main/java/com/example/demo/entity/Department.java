@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,10 +18,10 @@ public class Department {
     @Column(name = "title")
     private String title;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "department",
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "department",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
-    @JsonIgnore
+    @JsonBackReference
     private List<Employee> employees;
 
     public Department() {

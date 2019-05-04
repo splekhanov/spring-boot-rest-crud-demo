@@ -1,7 +1,5 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 
 @Entity
@@ -22,23 +20,21 @@ public class Employee {
     @Column(name = "email")
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY,
+    @ManyToOne(fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH},
             optional = false)
     @JoinColumn(name = "department_id", nullable = false)
-    @JsonIgnore
     private Department department;
 
     public Employee() {
 
     }
 
-    public Employee(String firstName, String lastName, String email, Department department) {
+    public Employee(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.department = department;
     }
 
     public int getId() {

@@ -11,39 +11,37 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-public class EmployeeDAOHibernateImpl implements EmployeeDAO {
+public class DepartmentDAOHibernateImpl implements DepartmentDAO {
 
     @Autowired
     private EntityManager entityManager;
 
     @Override
-    public List<Employee> findAll() {
+    public List<Department> findAllDepartments() {
         Session currentSession = entityManager.unwrap(Session.class);
-        Query<Employee> theQuery = currentSession.createQuery("from Employee", Employee.class);
-        List<Employee> employees = theQuery.getResultList();
-        return employees;
+        Query<Department> theQuery = currentSession.createQuery("from Department", Department.class);
+        List<Department> departments = theQuery.getResultList();
+        return departments;
     }
 
     @Override
-    public Employee findById(int theId) {
+    public Department findDepartmentById(int departmentId) {
         Session currentSession = entityManager.unwrap(Session.class);
-        Employee theEmployee = currentSession.get(Employee.class, theId);
-        return theEmployee;
+        Department department = currentSession.get(Department.class, departmentId);
+        return department;
     }
 
     @Override
-    public void save(Employee theEmployee) {
+    public void save(Department theDepartment) {
         Session currentSession = entityManager.unwrap(Session.class);
-        Department department = currentSession.get(Department.class, theEmployee.getDepartment().getId());
-        department.add(theEmployee);
-        currentSession.saveOrUpdate(theEmployee);
+        currentSession.saveOrUpdate(theDepartment);
     }
 
     @Override
     public void deleteById(int theId) {
         Session currentSession = entityManager.unwrap(Session.class);
-        Query theQuery = currentSession.createQuery("delete from Employee where id=:employeeId");
-        theQuery.setParameter("employeeId", theId);
+        Query theQuery = currentSession.createQuery("delete from Department where id=:departmentId");
+        theQuery.setParameter("departmentId", theId);
         theQuery.executeUpdate();
     }
 }
