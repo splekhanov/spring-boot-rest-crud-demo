@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,14 +22,23 @@ public class Employee {
     @Column(name = "email")
     private String email;
 
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH},
+            optional = false)
+    @JoinColumn(name = "department_id", nullable = false)
+    @JsonIgnore
+    private Department department;
+
     public Employee() {
 
     }
 
-    public Employee(String firstName, String lastName, String email) {
+    public Employee(String firstName, String lastName, String email, Department department) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.department = department;
     }
 
     public int getId() {
@@ -62,6 +73,14 @@ public class Employee {
         this.email = email;
     }
 
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
@@ -69,6 +88,7 @@ public class Employee {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
+                ", department=" + department +
                 '}';
     }
 }

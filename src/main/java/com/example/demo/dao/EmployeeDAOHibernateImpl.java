@@ -1,11 +1,11 @@
 package com.example.demo.dao;
 
+import com.example.demo.entity.Department;
 import com.example.demo.entity.Employee;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -25,6 +25,7 @@ public class EmployeeDAOHibernateImpl implements EmployeeDAO {
         Session currentSession = entityManager.unwrap(Session.class);
         Query<Employee> theQuery = currentSession.createQuery("from Employee", Employee.class);
         List<Employee> employees = theQuery.getResultList();
+        employees.forEach(e -> System.out.println("Employee " + e.getFirstName() + " is in Department: " + e.getDepartment()));
         return employees;
     }
 
@@ -38,6 +39,8 @@ public class EmployeeDAOHibernateImpl implements EmployeeDAO {
     @Override
     public void save(Employee theEmployee) {
         Session currentSession = entityManager.unwrap(Session.class);
+        Department department = theEmployee.getDepartment();
+        department.add(theEmployee);
         currentSession.saveOrUpdate(theEmployee);
     }
 
